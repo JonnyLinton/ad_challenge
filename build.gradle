@@ -3,11 +3,11 @@ buildscript {
 		springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
-		// NOTE: You should declare only repositories that you need here
 		mavenLocal()
 		mavenCentral()
 		maven { url "http://repo.spring.io/release" }
 		maven { url "http://repo.spring.io/milestone" }
+		maven { url "http://repo.spring.io/snapshot" }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -19,13 +19,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 
-jar {
-	baseName = 'spring-thymeleaf-example'
-	version =  '1.1.0'
-}
-
 repositories {
-	// NOTE: You should declare only repositories that you need here
 	mavenLocal()
 	mavenCentral()
 	maven { url "http://repo.spring.io/release" }
@@ -37,22 +31,11 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter")
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile("org.apache.commons:commons-lang3:3.0")
-	testCompile("org.springframework.boot:spring-boot-starter-test")
-	testCompile('org.easytesting:fest-assert:1.4')
 	compileOnly "org.projectlombok:lombok:1.16.12"
-	compile group: 'javax.persistence', name: 'persistence-api', version: '1.0'
 	compile("org.hibernate:hibernate-core:5.2.5.Final")
-}
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '1.11'
-}
-
-task "forceTest" {
-	dependsOn "cleanTest", "test"
-}
-
-task "fullBuild" {
-	dependsOn "cleanTest", "test", "check", "build"
+	compile group: 'com.fasterxml', name: 'jackson-xml-databind', version: '0.6.2'
+	compile group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.2'
+	compile "com.h2database:h2:1.4.191"
 }

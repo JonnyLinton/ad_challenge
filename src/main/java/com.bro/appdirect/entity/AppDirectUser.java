@@ -2,9 +2,13 @@ package com.bro.appdirect.entity;
 
 import lombok.Data;
 
-@Data 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@Data
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class AppDirectUser {
-	private String name;
-	private String id;
+	private String firstName;
+	private String lastName;
+	private String uuid;
 	private String email;
 }

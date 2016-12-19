@@ -1,25 +1,21 @@
 package com.bro.appdirect.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
+@Data
 public class SubscriptionResponse {
-	private String success;
-	@Setter
+	private boolean success;
 	private String errorCode;
-	@Setter
 	private String accountId;
 
-	private SubscriptionResponse(String success) {
+	public SubscriptionResponse(boolean success) {
 		this.success = success;
 	}
 
-	public static SubscriptionResponse success() {
-		return new SubscriptionResponse("success");
+	public static SubscriptionResponse success(String message) {
+		return new SubscriptionResponse(true);
 	}
-
 	public static SubscriptionResponse failure() {
-		return new SubscriptionResponse("failure");
+		return new SubscriptionResponse(false);
 	}
 }

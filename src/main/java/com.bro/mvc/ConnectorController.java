@@ -1,23 +1,90 @@
 package com.bro.mvc;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import static org.springframework.http.ResponseEntity.ok;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.bro.BroConnector;
+import com.bro.appdirect.entity.SubscriptionEvent;
+import com.bro.appdirect.entity.SubscriptionResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
 
 @Controller
 public class ConnectorController {
-	private Log LOG = LogFactory.getLog(BroController.class);
 
-	@RequestMapping(value = "/order", method = RequestMethod.GET)
-	public String create(ModelMap map) {
+	private ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired
+	private BroConnector broConnector = new BroConnector();
 
+	@RequestMapping(value = "/api/v1/integration/processEvent", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<SubscriptionResponse> create(@RequestParam String eventUrl) {
+		if (eventUrl.isEmpty()) { // return a failure
+			SubscriptionResponse failure = SubscriptionResponse.failure();
+			failure.setErrorCode("BAD_REQUEST");
+			return ResponseEntity.badRequest().body(failure);
+		}
+
+		SubscriptionEvent event = null;
+		try {
+			event = fetchEvent(eventUrl);
+		} catch (Exception e) {
+			// TODO: handle this somehow
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		SubscriptionResponse response = broConnector.create(event);
+
+		return ok(response);
 	}
 
-	@RequestMapping(value = "/cancel", method = RequestMethod.GET)
-	public String cancel(ModelMap map) {
+	@RequestMapping(value = "/cancel", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<SubscriptionResponse> cancel(@RequestParam String eventUrl) {
+		if (eventUrl.isEmpty()) { // return a failure
+			SubscriptionResponse failure = SubscriptionResponse.failure();
+			failure.setErrorCode("BAD_REQUEST");
+			return ResponseEntity.badRequest().body(failure);
+		}
 
+		SubscriptionEvent event = null;
+		try {
+			event = fetchEvent(eventUrl);
+		} catch (Exception e) {
+			// TODO: handle this somehow
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		SubscriptionResponse response = broConnector.cancel(event);
+
+		return ok(response);
 	}
+
+	private SubscriptionEvent fetchEvent(String eventUrl) throws Exception {
+		// httpclient -- signed fetch
+		OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret"); // insert your creds
+		URL url = new URL(eventUrl);
+		HttpURLConnection request = (HttpURLConnection) url.openConnection();
+		consumer.sign(request);    
+		request.connect();
+
+		String event;
+		try (Scanner scanner = new Scanner(request.getInputStream()).useDelimiter("\\A")) {
+			event = scanner.hasNext() ? scanner.next() : "";
+		}
+		System.out.println(event);
+
+		return objectMapper.readValue(event, SubscriptionEvent.class);
+	} 
 }
