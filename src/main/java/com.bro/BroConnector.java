@@ -45,13 +45,9 @@ public class BroConnector {
 	}
 
 	public SubscriptionResponse cancel(SubscriptionEvent cancelEvent) {
-		String id = cancelEvent.getPayload().getAccount().getAccountIdentifier();
-		User user = userRepo.findOne(id);
+		User user = userRepo.findByEmail(cancelEvent.getCreator().getEmail());
 		userRepo.delete(user);
 
-		SubscriptionResponse response = SubscriptionResponse.success();
-		response.setAccountId(id); //TODO: correct id?
-
-		return response;
+		return SubscriptionResponse.success();
 	}
 }
