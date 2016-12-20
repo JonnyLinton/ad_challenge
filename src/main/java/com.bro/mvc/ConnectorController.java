@@ -50,7 +50,7 @@ public class ConnectorController {
 
 	private SubscriptionEvent fetchEvent(String eventUrl) throws Exception {
 		// httpclient -- signed fetch
-		OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret"); // insert your creds
+		OAuthConsumer consumer = new DefaultOAuthConsumer("tinyapp-140704", "r0BP3MUapttUw9Ij");
 		URL url = new URL(eventUrl);
 		HttpURLConnection request = (HttpURLConnection) url.openConnection();
 		consumer.sign(request);
