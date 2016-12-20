@@ -67,7 +67,7 @@ public class ConnectorController {
 
 		String eventJson = XML.toJSONObject(event).toString();
 		System.out.println(eventJson);
-		Event tempEvent = objectMapper.readValue(event, Event.class);
+		Event tempEvent = objectMapper.readValue(eventJson, Event.class);
 		return tempEvent.getEvent();
 	}
 }
