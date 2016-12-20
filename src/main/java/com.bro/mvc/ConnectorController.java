@@ -64,6 +64,7 @@ public class ConnectorController {
 		System.out.println(event);
 
 		String eventJson = XML.toJSONObject(event).toString();
+		System.out.println(eventJson);
 		return objectMapper.readValue(eventJson, SubscriptionEvent.class);
 	}
 }
