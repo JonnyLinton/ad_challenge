@@ -6,6 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthConsumer;
 
 @Controller
+@Slf4j
 public class ConnectorController {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
@@ -40,10 +43,8 @@ public class ConnectorController {
 		SubscriptionEvent event = null;
 		try {
 			event = fetchEvent(eventUrl);
-			System.out.println(event);
 		} catch (Exception e) {
-			// TODO: handle this somehow
-			e.printStackTrace();
+			log.error("Exception when attempting to fetch the Event at Url = { " +eventUrl +" }", e);
 			System.exit(1);
 		}
 
@@ -63,11 +64,26 @@ public class ConnectorController {
 		try (Scanner scanner = new Scanner(request.getInputStream()).useDelimiter("\\A")) {
 			event = scanner.hasNext() ? scanner.next() : "";
 		}
-		System.out.println(event);
 
 		String eventJson = XML.toJSONObject(event).toString();
-		System.out.println(eventJson);
 		Event tempEvent = objectMapper.readValue(eventJson, Event.class);
 		return tempEvent.getEvent();
 	}
+
+////	TB / SAMPLE MARKETPLACE
+//  private SubscriptionEvent fetchEvent(String eventUrl) throws Exception {
+//		// httpclient -- signed fetch
+//		OAuthConsumer consumer = new DefaultOAuthConsumer("tinyapp-140704", "r0BP3MUapttUw9Ij");
+//		URL url = new URL(eventUrl);
+//		HttpURLConnection request = (HttpURLConnection) url.openConnection();
+//		consumer.sign(request);
+//		request.connect();
+//
+//		String event;
+//		try (Scanner scanner = new Scanner(request.getInputStream()).useDelimiter("\\A")) {
+//			event = scanner.hasNext() ? scanner.next() : "";
+//		}
+//
+//		return objectMapper.readValue(event, SubscriptionEvent.class);
+//	}
 }

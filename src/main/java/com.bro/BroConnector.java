@@ -33,7 +33,7 @@ public class BroConnector {
 
 		User broUser = new User();
 		broUser.setName(appdirectUser.getFirstName() + " " + appdirectUser.getLastName());
-		broUser.setEdition(BASIC); // TODO: hardcoded for now
+		broUser.setEdition(BASIC); // hardcoded for now
 		broUser.setEmail(appdirectUser.getEmail());
 
 		userRepo.save(broUser);
@@ -50,4 +50,15 @@ public class BroConnector {
 
 		return SubscriptionResponse.success();
 	}
+
+////	TB / SAMPLE MARKETPLACE
+//  public SubscriptionResponse cancel(SubscriptionEvent cancelEvent) {
+//		String id = cancelEvent.getPayload().getAccount().getAccountIdentifier();
+//		User user = userRepo.findOne(id);
+//		userRepo.delete(user);
+//
+//		SubscriptionResponse response = SubscriptionResponse.success();
+//
+//		return response;
+//	}
 }
