@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -62,6 +63,7 @@ public class ConnectorController {
 		}
 		System.out.println(event);
 
-		return objectMapper.readValue(event, SubscriptionEvent.class);
+		String eventJson = XML.toJSONObject(event).toString();
+		return objectMapper.readValue(eventJson, SubscriptionEvent.class);
 	}
 }

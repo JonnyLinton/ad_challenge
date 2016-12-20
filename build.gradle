@@ -38,6 +38,7 @@ dependencies {
 	compile group: 'com.fasterxml', name: 'jackson-xml-databind', version: '0.6.2'
 	compile group: 'oauth.signpost', name: 'signpost-commonshttp4', version: '1.2'
 	compile "com.h2database:h2:1.4.191"
+	compile group: 'org.json', name: 'json', version: '20160810'
 }
 
 task stage(dependsOn: ['build', 'clean'])
