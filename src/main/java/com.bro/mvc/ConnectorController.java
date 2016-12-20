@@ -31,7 +31,7 @@ public class ConnectorController {
 	public ResponseEntity<SubscriptionResponse> processEvent(@RequestParam String eventUrl) {
 		if (eventUrl.isEmpty()) { // return a failure
 			SubscriptionResponse failure = SubscriptionResponse.failure();
-			failure.setErrorCode("BAD_REQUEST");
+			failure.setErrorCode("UNKNOWN_ERROR");
 			return ResponseEntity.badRequest().body(failure);
 		}
 
