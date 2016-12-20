@@ -28,7 +28,7 @@ public class ConnectorController {
 	private BroConnector broConnector = new BroConnector();
 
 	@RequestMapping(value = "/api/v1/integration/processEvent", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<SubscriptionResponse> create(@RequestParam String eventUrl) {
+	public ResponseEntity<SubscriptionResponse> processEvent(@RequestParam String eventUrl) {
 		if (eventUrl.isEmpty()) { // return a failure
 			SubscriptionResponse failure = SubscriptionResponse.failure();
 			failure.setErrorCode("BAD_REQUEST");
@@ -44,30 +44,7 @@ public class ConnectorController {
 			System.exit(1);
 		}
 
-		SubscriptionResponse response = broConnector.create(event);
-
-		return ok(response);
-	}
-
-	@RequestMapping(value = "/cancel", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<SubscriptionResponse> cancel(@RequestParam String eventUrl) {
-		if (eventUrl.isEmpty()) { // return a failure
-			SubscriptionResponse failure = SubscriptionResponse.failure();
-			failure.setErrorCode("BAD_REQUEST");
-			return ResponseEntity.badRequest().body(failure);
-		}
-
-		SubscriptionEvent event = null;
-		try {
-			event = fetchEvent(eventUrl);
-		} catch (Exception e) {
-			// TODO: handle this somehow
-			e.printStackTrace();
-			System.exit(1);
-		}
-
-		SubscriptionResponse response = broConnector.cancel(event);
-
+		SubscriptionResponse response = broConnector.handleEvent(event);
 		return ok(response);
 	}
 
@@ -76,7 +53,7 @@ public class ConnectorController {
 		OAuthConsumer consumer = new DefaultOAuthConsumer("Dummy", "secret"); // insert your creds
 		URL url = new URL(eventUrl);
 		HttpURLConnection request = (HttpURLConnection) url.openConnection();
-		consumer.sign(request);    
+		consumer.sign(request);
 		request.connect();
 
 		String event;
@@ -86,5 +63,5 @@ public class ConnectorController {
 		System.out.println(event);
 
 		return objectMapper.readValue(event, SubscriptionEvent.class);
-	} 
+	}
 }

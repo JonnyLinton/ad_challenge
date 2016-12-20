@@ -12,7 +12,7 @@ public class SubscriptionResponse {
 		this.success = success;
 	}
 
-	public static SubscriptionResponse success(String message) {
+	public static SubscriptionResponse success() {
 		return new SubscriptionResponse(true);
 	}
 	public static SubscriptionResponse failure() {

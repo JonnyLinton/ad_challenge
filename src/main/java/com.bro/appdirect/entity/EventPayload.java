@@ -10,5 +10,5 @@ public class EventPayload {
 	private AppDirectUser user;
 	private Company company;
 	private Order order;
-	private Subscription subscription;
+	private Account account;
 }

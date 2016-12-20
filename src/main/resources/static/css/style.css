@@ -1,0 +1,36 @@
+#container {
+    position: relative;
+    font-family: Helvetica;
+}
+#broImage img {
+    position: absolute;
+    width: 200px;
+    float: left;
+    border: 3px solid black;
+}
+#header {
+    position: absolute;
+    background-color: lightslategrey;
+    height: 250px;
+    width: 1000px;
+    left: 202px;
+    border: 3px solid black;
+    text-align: center;
+    line-height: 70%;
+    font-variant: small-caps;
+}
+#header h1 {
+    font-size: 300%;
+    padding: 100px 0;
+}
+#content {
+    position: absolute;
+    background-color: slategrey;
+    height: 500px;
+    width: 1142px;
+    top: 253px;
+    float: left;
+    border: 3px solid black;
+    padding-left: 30px;
+    padding-right: 30px;
+}
