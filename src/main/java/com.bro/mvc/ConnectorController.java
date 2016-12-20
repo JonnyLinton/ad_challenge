@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bro.BroConnector;
+import com.bro.appdirect.entity.Event;
 import com.bro.appdirect.entity.SubscriptionEvent;
 import com.bro.appdirect.entity.SubscriptionResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +40,7 @@ public class ConnectorController {
 		SubscriptionEvent event = null;
 		try {
 			event = fetchEvent(eventUrl);
+			System.out.println(event);
 		} catch (Exception e) {
 			// TODO: handle this somehow
 			e.printStackTrace();
@@ -65,6 +67,7 @@ public class ConnectorController {
 
 		String eventJson = XML.toJSONObject(event).toString();
 		System.out.println(eventJson);
-		return objectMapper.readValue(eventJson, SubscriptionEvent.class);
+		Event tempEvent = objectMapper.readValue(event, Event.class);
+		return tempEvent.getEvent();
 	}
 }
